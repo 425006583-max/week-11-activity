@@ -1,0 +1,128 @@
+
+// WEEK 9/10: BASE CLASS - COFFEE MANAGEMENT
+
+
+class Coffee {
+  // Properties (Fields)
+  String name;
+  String size;
+  double price;
+
+  // Encapsulation: Private field protected with an underscore '_'
+  int _stockCount;
+
+  // Constructor
+  Coffee({
+    required this.name,
+    required this.size,
+    required this.price,
+    int initialStock = 10,
+  }) : _stockCount = initialStock;
+
+  // Getter: Read-only access to the private _stockCount field
+  int get stockCount => _stockCount;
+
+  // Behavior: Method to serve coffee and safely manage private stock
+  void serveCoffee() {
+    if (_stockCount > 0) {
+      _stockCount--;
+      print('☕ Served one $size $name. Remaining stock: $_stockCount');
+    } else {
+      print('❌ Sorry, $name is currently out of stock!');
+    }
+  }
+
+  // Helper method to display item information
+  void displayDetails() {
+    print('Item: $name ($size) | Price: ₱${price.toStringAsFixed(2)} | Stock: $_stockCount');
+  }
+}
+
+// ============================================================================
+// WEEK 10: DERIVED CLASS (INHERITANCE)
+// OnlineCoffeeOrder inherits properties & behaviors from Coffee
+// ============================================================================
+class OnlineCoffeeOrder extends Coffee {
+  String customerName;
+
+  OnlineCoffeeOrder({
+    required String name,
+    required String size,
+    required double price,
+    required this.customerName,
+    int initialStock = 10,
+  }) : super(
+          name: name,
+          size: size,
+          price: price,
+          initialStock: initialStock,
+        );
+
+  
+  // ASYNCHRONOUS METHOD (FUTURE & DELAY)
+  // Simulates a background operation (brewing time) without locking the app
+  
+  Future<String> brewCoffeeAsync() async {
+    print('⏱️ [BARISTA] Started brewing $size $name for $customerName...');
+
+    // Simulate realistic 2-second delay for brewing
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Return the result after delay finishes
+    return '✅ [ORDER READY] $size $name for $customerName is hot and ready at the counter!';
+  }
+}
+
+
+// MAIN FUNCTION (  AWAIT & NON-BLOCKING DEMONSTRATION)
+
+void main() async {
+  print('=== COFFEE SHOP MANAGEMENT SYSTEM ===\n');
+
+  // STEP 5 (Week 9): Store multiple Coffee objects inside a List collection
+  List<Coffee> menu = [
+    Coffee(name: 'Iced Caramel Macchiato', size: 'Large', price: 165.0, initialStock: 5),
+    Coffee(name: 'Spanish Latte', size: 'Medium', price: 145.0, initialStock: 3),
+  ];
+
+  // Displaying menu items
+  print('--- STORE MENU ---');
+  for (var coffee in menu) {
+    coffee.displayDetails();
+  }
+  print('');
+
+  // Testing encapsulation state update & getter
+  print('--- TESTING STOCK CONTROL ---');
+  menu[0].serveCoffee();
+  print('Stock verified via getter: ${menu[0].stockCount}\n');
+
+  // Creating an object from the derived class
+  OnlineCoffeeOrder AlexOrder = OnlineCoffeeOrder(
+    name: 'Spanish Latte',
+    size: 'Large',
+    price: 175.0,
+    customerName: 'Alex',
+  );
+
+  print('- PROCESSING ASYNC ONLINE ORDER -');
+  
+  // STEP A: Trigger message before calling async method
+  print(' STEP A: Alex places an order for a Large Spanish Latte.');
+
+  // Call the async method (Returns a pending Future)
+  Future<String> brewingTask = AlexOrder.brewCoffeeAsync();
+
+  // STEP B: PROOF OF NON-BLOCKING EXECUTION
+  // This line prints IMMEDIATELY without waiting for the 2-second brewing process!
+  print('--> STEP B: Cashier prints receipt & serves next customer in line (System is NOT frozen!).');
+
+  // STEP C: Await the delayed result only when ready
+  String orderStatus = await brewingTask;
+
+  // Print the final result after the delay completes
+  print('- STEP C: Pickup counter alert received:');
+  print('    $orderStatus\n');
+
+  print('=== COFFEE SHOP SYSTEM OPERATING NORMALLY ===');
+}
