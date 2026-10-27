@@ -1,0 +1,18 @@
+=== COFFEE SHOP MANAGEMENT SYSTEM ===
+
+--- STORE MENU ---
+Item: Iced Caramel Macchiato (Large) | Price: ₱165.00 | Stock: 5
+Item: Spanish Latte (Medium) | Price: ₱145.00 | Stock: 3
+
+--- TESTING STOCK CONTROL ---
+☕ Served one Large Iced Caramel Macchiato. Remaining stock: 4
+Stock verified via getter: 4
+
+- PROCESSING ASYNC ONLINE ORDER -
+ STEP A: Alex places an order for a Large Spanish Latte.
+⏱️ [BARISTA] Started brewing Large Spanish Latte for Alex...
+--> STEP B: Cashier prints receipt & serves next customer in line (System is NOT frozen!).
+- STEP C: Pickup counter alert received:
+    ✅ [ORDER READY] Large Spanish Latte for Alex is hot and ready at the counter!
+
+=== COFFEE SHOP SYSTEM OPERATING NORMALLY ===
